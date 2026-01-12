@@ -1,0 +1,1083 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{babel}
+\usepackage[most]{tcolorbox}
+\usepackage{parskip} 
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage[all]{nowidow}
+
+
+\usepackage{siunitx}
+\sisetup{
+    output-decimal-marker = {.}, 
+    per-mode = symbol,
+    separate-uncertainty = true,
+    exponent-product = \cdot,
+    inter-unit-product = \ensuremath{{}\cdot{}}
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+% Caja azul para el enunciado principal
+\newtcolorbox{notacaja}{
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  title=Enunciado del Ejercicio, 
+  fonttitle=\bfseries
+}
+
+% Caja gris para los subapartados
+% Acepta un argumento (#1) que será el título de la caja (Ej: Apartado 2.1)
+\newtcolorbox{subcaja}[1]{
+  colback=gray!5!white,
+  colframe=gray!75!black,
+  title=#1, 
+  fonttitle=\bfseries
+}
+
+\title{Cuaderno de Ejercicios Resueltos \\ Modelos de Programación}
+\author{Antonio Morales García \\ \\
+        Máster en Computación Cuántica \\
+        Universidad Antonio Nebrija }
+\date{Curso 2025/2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\part{Ejercicios de Modelos de Programación}
+
+\section{Ejercicio 1: Tabla de verdad y función algebraica}
+\begin{notacaja}
+Completa la tabla de verdad y la expresión algebraica final del siguiente sistema lógico.
+
+Se definen las operaciones internas:
+\begin{itemize}
+    \item $AND1 = NOT(A) \text{ AND } B$
+    \item $OR1 = (NOT(A) \text{ AND } B) \text{ OR } C$
+    \item $Salida = OR1 \text{ AND } D$
+\end{itemize}
+
+Con las entradas A, B, C y D, completa la tabla de verdad (incluyendo $NOT(A)$, AND1 y OR1) y determina la expresión booleana final simplificada de Salida en función de A, B, C y D.
+\end{notacaja}
+
+Para resolver este ejercicio, calculamos primero los valores intermedios. AND1 solo vale 1 cuando A es 0 y B es 1. 
+
+Para OR1 debemos aprovechar que la primera parte de su expresión coincide con AND1. Por tanto, OR1 vale 1 si AND1 es 1 o si C es 1. 
+
+Finalmente, $Salida$ solo es 1 si OR1 es 1 y D es 1.
+
+La tabla de verdad queda de la siguiente manera:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c||c|c|c||c|}
+\hline
+A & B & C & D & NOT(A) & AND1 & OR1 & Salida \\
+\hline
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
+0 & 1 & 0 & 0 & 1 & 1 & 1 & 0 \\
+0 & 1 & 0 & 1 & 1 & 1 & 1 & 1 \\
+0 & 1 & 1 & 0 & 1 & 1 & 1 & 0 \\
+0 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 0 & 0 & 0 & 1 & 0 \\
+1 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 1 & 0 & 0 & 0 & 0 \\
+1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 \\
+1 & 1 & 1 & 1 & 0 & 0 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Para obtener la expresión algebraica, observamos que la salida depende directamente de D y del término OR1.
+
+\[ Salida = OR1 \cdot D \]
+
+OR1 se puede expresar directamente en función de A, B y C, pues nos la dan así en el enucniado
+
+\[ OR1 = \bar{A} \cdot B + C \]
+
+Sustituyendo todo en la expresión de $Salida$:
+\[ Salida = ((\bar{A} \cdot B) + C) \cdot D \]
+
+Y simplificando:
+\[ Salida = \bar{A}BD + CD \]
+
+
+\newpage
+
+\section{Ejercicio 2: Puertas clásicas, puertas cuánticas y Full Adder}
+\begin{subcaja}{Apartado 2.1}
+¿Cuál de las siguientes afirmaciones describe mejor la diferencia entre las puertas clásicas y las puertas cuánticas?
+\begin{itemize}
+    \item[a)] Las puertas clásicas manipulan bits individuales (0 o 1) de manera determinista, mientras que las puertas cuánticas operan sobre qubits que pueden estar en superposición y producen resultados que pueden depender de probabilidades.
+    \item[b)] Las puertas cuánticas solo funcionan en computadoras clásicas, mientras que las puertas clásicas solo funcionan en computadoras cuánticas.
+    \item[c)] Las puertas clásicas son reversibles, mientras que las puertas cuánticas siempre destruyen información.
+    \item[d)] No existe ninguna diferencia funcional entre puertas clásicas y cuánticas, salvo sus nombres.
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} Las puertas clásicas trabajan con valores definidos y deterministas, mientras que las cuánticas aprovechan propiedades como la superposición y el resultado de su medición es probabilístico.
+
+\begin{subcaja}{Apartado 2.2}
+¿Qué propiedad distingue a las puertas cuánticas de las clásicas?
+\begin{itemize}
+    \item[a)] Son reversibles y pueden crear superposición y entrelazamiento.
+    \item[b)] Solo funcionan con un bit a la vez.
+    \item[c)] Generan aleatoriedad sin control.
+    \item[d)] Siempre producen resultados deterministas.
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} Todas las puertas cuánticas deben ser unitarias y por tanto tienen inversa (son reversibles), lo que permite recuperar el estado anterior, además de generar fenómenos cuánticos.
+
+\textit{Nota: La pregunta pide la propiedad que distingue a unas puertas de otras. Hemos asumido que se pide una propiedad de las puertas cuánticas. Si nos pidiesen una propiedad de las puertas clásicas que las distingue de las cuánticas, la respuesta correcta sería la d).}
+
+\begin{subcaja}{Apartado 2.3}
+¿Qué puertas lógicas clásicas se utilizan típicamente para construir un Full Adder?
+\begin{itemize}
+    \item[a)] AND, OR, NOT
+    \item[b)] XOR, AND, OR
+    \item[c)] NAND, NOR, XOR
+    \item[d)] OR, NOT, XOR
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} En un sumador completo clásico, la suma se calcula mediante puertas XOR y el acarreo se gestiona mediante combinaciones de AND y OR. Si solo fuese un semisumador (Half Adder), sería suficiente con una puerta XOR y una puerta AND.
+
+\begin{subcaja}{Apartado 2.4}
+En un Full Adder cuántico, ¿qué tipo de puertas se utilizan para calcular la suma de los qubits?
+\begin{itemize}
+    \item[a)] Puertas CNOT
+    \item[b)] Puertas X y Z
+    \item[c)] Puertas Toffoli y CNOT
+    \item[d)] Puertas Hadamard únicamente
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} La puerta CNOT es el equivalente cuántico de la puerta XOR clásica, que es la operación fundamental para sumar bits (suma módulo 2), y podemos usar dos consecutivas para calcular la suma de dos qubits y añadir también el acarreo de entrada. 
+
+Si queremos calcular el acarreo de salida necesitamos hacer una puerta Toffoli.
+
+\begin{subcaja}{Apartado 2.5}
+En un Full Adder cuántico, ¿qué puertas se combinan para generar la salida de acarreo?
+\begin{itemize}
+    \item[a)] Puertas CNOT y Toffoli
+    \item[b)] Solo puertas X
+    \item[c)] Puertas Hadamard y Z
+    \item[d)] Puertas SWAP y CNOT
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} Para calcular el acarreo de los dos bits de entrada necesitamos una operación equivalente al AND, que en computación cuántica se implementa con la puerta de Toffoli (CCNOT). 
+
+Sin embargo, si queremos tener en cuenta el acarreo de entrada, debemos aprovechar el resultado de la suma sin acarreo.
+
+Por tanto, necesitaremos implicitamente una puerta CNOT que habremos usado para sumar un bit de entrada al otro.
+
+\newpage
+
+\section{Ejercicio 3: Estados cuánticos}
+\begin{subcaja}{Apartado 3.1}
+¿Cuál de las siguientes afirmaciones describe correctamente un estado cuántico de un solo qubit?
+\begin{itemize}
+    \item[a)] Un vector de dimensión 2 que puede estar en superposición de $|0\rangle$ y $|1\rangle$.
+    \item[b)] Una matriz 2x2 que siempre contiene solo ceros y unos.
+    \item[c)] Un número complejo que representa la probabilidad de medir 0 o 1.
+    \item[d)] Un bit clásico que solo puede valer 0 o 1.
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} Matemáticamente, un qubit se representa en un espacio de Hilbert de dimensión 2 mediante un vector columna con dos coeficientes complejos. La relación entre los dos coeficientes complejos representa la superposición.
+
+\begin{subcaja}{Apartado 3.2}
+Si un qubit está en el estado $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$, ¿qué condición deben cumplir $\alpha$ y $\beta$?
+\begin{itemize}
+    \item[a)] $\alpha + \beta = 1$
+    \item[b)] $|\alpha|^2 + |\beta|^2 = 1$
+    \item[c)] $\alpha^2 + \beta^2 = 0$
+    \item[d)] No hay ninguna condición
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} La suma de los módulos al cuadrado (la amplitud de probabilidad) debe ser igual a 1, ya que para estar normalizado, la probabilidad total debe ser 1 (el 100\%).
+
+\begin{subcaja}{Apartado 3.3}
+¿Cómo se representa una puerta cuántica que actúa sobre un qubit?
+\begin{itemize}
+    \item[a)] Como un vector 2x1
+    \item[b)] Como una matriz 2x2 (o mayor si son múltiples qubits)
+    \item[c)] Como un número complejo
+    \item[d)] Como un bit
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} Las operaciones sobre estados cuánticos son transformaciones lineales, y se pueden describir siempre mediante una matriz unitaria. Para un único qubit (un vector de dos elementos), la matriz que opera sobre el mismo será de tamaño 2x2.
+
+\begin{subcaja}{Apartado 3.4}
+Si aplicamos la puerta X (NOT cuántico) al qubit $|0\rangle$, ¿cuál será el estado resultante?
+\begin{itemize}
+    \item[a)] $|0\rangle$
+    \item[b)] $|1\rangle$
+    \item[c)] $(|0\rangle + |1\rangle) / \sqrt{2}$
+    \item[d)] 0
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} La puerta X invierte el estado del qubit, transformando el estado $|0\rangle$ en $|1\rangle$.
+
+\begin{subcaja}{Apartado 3.5}
+Si aplicamos primero una puerta Hadamard H al estado $|0\rangle$ y luego una X, ¿cuál será el estado resultante?
+\begin{itemize}
+    \item[a)] $|0\rangle$
+    \item[b)] $|1\rangle$
+    \item[c)] $(|0\rangle - |1\rangle) / \sqrt{2}$
+    \item[d)] $(|0\rangle + |1\rangle) / \sqrt{2}$
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la d)} La puerta H transforma $|0\rangle$ en $\frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$, que es conocido como el estado $|+\rangle$. Al aplicar X a este estado, se intercambian los coeficientes, pero como los coeficientes del estado son iguales, el estado continúa siendo $|+\rangle$.
+
+\newpage
+
+\section{Ejercicio 4: Esfera de Bloch, ejes y mediciones}
+\begin{subcaja}{Apartado 4.1}
+En la esfera de Bloch, el estado $|0\rangle$ se encuentra ubicado en:
+\begin{itemize}
+    \item[a)] El polo norte (eje Z positivo)
+    \item[b)] El polo sur (eje Z negativo)
+    \item[c)] En el ecuador (plano XY)
+    \item[d)] En el eje X positivo
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)}  Es la convención estándar representar el estado base en el polo norte (arriba).
+
+\begin{center}
+    \includegraphics[width=0.4\linewidth]{bloch-0.png} \\
+    \captionof{figure}{Esfera de bloch para un qubit en estado $|0\rangle$}
+\end{center}
+
+\begin{subcaja}{Apartado 4.2}
+Si un qubit está en el estado $|\psi\rangle = (|0\rangle + |1\rangle) / \sqrt{2}$, ¿dónde se ubica aproximadamente en la esfera de Bloch?
+\begin{itemize}
+    \item[a)] Polo norte
+    \item[b)] Polo sur
+    \item[c)] Eje X positivo
+    \item[d)] Eje Y positivo
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la c)} Este es el estado $|+\rangle$, que se encuentra en la intersección del ecuador con el eje X positivo.
+
+\begin{center}
+    \includegraphics[width=0.4\linewidth]{bloch-+.png} \\
+    \captionof{figure}{Esfera de bloch para un qubit en estado $|+\rangle$}
+\end{center}
+
+\begin{subcaja}{Apartado 4.3}
+Medir un qubit en el eje Z significa:
+\begin{itemize}
+    \item[a)] Determinar la amplitud de $|0\rangle$ y $|1\rangle$
+    \item[b)] Colapsar el qubit a $|0\rangle$ o $|1\rangle$ con probabilidades $|\alpha|^2$ y $|\beta|^2$
+    \item[c)] Cambiar su estado a una superposición
+    \item[d)] Rotarlo alrededor del eje X
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} La medición es un proceso que fuerza al qubit a colapsar a uno de los estados de la base. En general, se realizan siempre mediciones sobre el eje Z, y si queremos medir sobre otro eje, debemos realizar un cambio de base previamente, aplicando las rotaciones apropiadas, para luego medir sobre el eje Z.
+
+\begin{subcaja}{Apartado 4.4}
+Si un qubit tiene amplitudes $\alpha = \sqrt{3}/2$ y $\beta = 1/2$, ¿cuál es la probabilidad de medir $|1\rangle$ en el eje Z?
+\begin{itemize}
+    \item[a)] 1/4
+    \item[b)] 3/4
+    \item[c)] 1/2
+    \item[d)] 1
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la a)} La probabilidad es el módulo al cuadrado de la amplitud: $P(1) = |1/2|^2 = 1/4$.
+
+\begin{center}
+    \includegraphics[width=0.4\linewidth]{bloch-25\%.png} \\
+    \captionof{figure}{Esfera de bloch para un qubit en estado $[ 0.866+0j, 0.5+0j ]$, con probabilidad $25\%$ ($1/4$) de colapsar al estado $|1\rangle$}
+\end{center}
+
+\begin{subcaja}{Apartado 4.5}
+En un Quantum Circuit escrito en QASM, ¿qué hace la instrucción h q[0]; aplicada a un qubit inicialmente en $|0\rangle$?
+\begin{itemize}
+    \item[a)] No cambia el estado del qubit, permanece en $|0\rangle$.
+    \item[b)] Coloca el qubit en superposición de $|0\rangle$ y $|1\rangle$ con igual probabilidad.
+    \item[c)] Colapsa automáticamente el qubit a $|1\rangle$.
+    \item[d)] Genera un error en el circuito porque H no puede aplicarse a $|0\rangle$.
+\end{itemize}
+\end{subcaja}
+
+\textbf{La respuesta correcta es la b)} La puerta Hadamard es la operación estándar para crear superposición con igual probabilidad, y en QASM se hace con h y el qubit sobre el que se quiere aplicar.
+
+\newpage
+
+\section{Ejercicio 5: Estados de Bell. Circuito y visualizaciones}
+\begin{notacaja}
+Diseña un circuito cuántico que prepare un estado de Bell: 
+\[ |\Phi^{+}\rangle = \frac{|00\rangle + |11\rangle}{\sqrt{2}} \]
+\end{notacaja}
+
+\begin{subcaja}{Apartado 1}
+Escribe el código QASM que implementa este circuito.
+\end{subcaja}
+Para generar el estado de Bell $\Phi^{+}$, necesitamos poner el primer qubit en superposición y luego entrelazarlo con el segundo usando una puerta CNOT. 
+
+\begin{verbatim}
+    OPENQASM 2.0;
+    include "qelib1.inc";
+    
+    qreg q[2];
+    
+    h q[0];
+    cx q[0],q[1];
+\end{verbatim}
+
+\begin{subcaja}{Apartado 2}
+Simula y muestra las siguientes visualizaciones del estado obtenido:
+\begin{itemize}
+    \item Histograma de probabilidades
+    \item Qsphere
+    \item State Vector
+    \item Discos de fase
+\end{itemize}
+\end{subcaja}
+
+\subsubsection*{Histograma de probabilidades}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{5.histograma-phi+.png} \\
+    \captionof{figure}{Histograma para el estado $\Phi^{+}$ (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\subsubsection*{Qsphere}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{5.qsphere-phi+.png} \\
+    \captionof{figure}{Qsphere para el estado $\Phi^{+}$ (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\subsubsection*{State Vector}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{5.state-vector-phi+.png} \\
+    \captionof{figure}{Vector de estado para el estado $\Phi^{+}$ (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\subsubsection*{Discos de fase}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{5.discos-fase-phi+.png} \\
+    \captionof{figure}{Discos de fase para cada qubit del estado $\Phi^{+}$}
+\end{center}
+
+
+\begin{subcaja}{Apartado 3}
+Interpreta cada visualización, explicando qué información aporta sobre el estado.
+\end{subcaja}
+
+
+\subsubsection*{Histograma de probabilidades}
+En este histograma vemos las probabilidades de que, si medimos los qubits del estado, colapsen a un valor u otro. Como podemos ver, aunque ambos qubits pueden colapsar, con igual probabilidad, tanto a $|0\rangle$ como a $|1\rangle$, el estado en su conjunto solo puede colapsar a $|00\rangle$ o $|11\rangle$, ya que ambos qubits están entrelazados: cuando se mida y tome un valor, el otro tomará necesariamente el mismo valor.
+
+El histograma nos muestra precisamente que ambos estados $|00\rangle$ y $|11\rangle$, tienen el 50\% de probabilidades cada uno, mientras que los otros dos posibles estados tienen probabilidad nula.
+
+\subsubsection*{Qsphere}
+En la Qsphere vemos los dos posibles estados a los que puede colapsar el sistema, cada uno representado mediante un segmento con un círculo al final. Solo se muestran los estados con probabilidad no nula. 
+
+El tamaño de los círculos al final de cada segmento indica la probabilidad de colapsar a ese estado (y vemos que ambos estados tienen igual probabilidad). 
+
+El color del segmento y el círculo del estado nos indica su fase (en $\Phi^{+}$ ambos estados tienen la misma fase).
+
+\subsubsection*{State Vector}
+El state vector nos muestra dos cosas:
+\begin{itemize}
+    \item El vector de estado, que es una sucesión de números complejos que representan la amplitud de probabilidad de cada uno de los estados de la base ($|00\rangle$, $|01\rangle$, $|10\rangle$, $|11\rangle$).
+    \item Una representación gráfica del vector de estado. El tamaño de cada barra nos indica su amplitud de probabilidad (la probabilidad se obtiene como el cuadrado de la amplitud), y el color su fase.
+\end{itemize}
+
+\subsubsection*{Discos de fase}
+Los discos de fase, al final de cada qubit, nos indican:
+\begin{itemize}
+    \item La probabilidad que tiene cada qubit de tomar un valor u otro, en forma de la proporción del círculo que está llena de color (respecto a la que está gris). En este caso, ambos qubits tienen un 50\% de probabilidades de valer $|00\rangle$ o $|11\rangle$.
+    \item El grado de entrelazamiento, como la circunferencia negra. Esta circunferencia puede estar en el borde del círculo de fase (estado puro, sin entrelazamiento), tener un radio que sea aproximadamente la mitad del radio del círculo de fase (entrelazamiento máximo), o un punto entre ambos dependiendo del grado de entrelazamiento que tenga este qubit. En este caso, ambos qubits están en un estado de máximo entrelazamiento (el valor de uno está completamente determinado por el valor del otro)
+    \item La fase de cada qubit, mediante el segmento que apunta a un ángulo del círculo de fase. En este caso, ambos qubits tienen la misma fase.
+\end{itemize}
+
+
+\newpage
+
+\section{Ejercicio 6: Estados de Bell. Medidas condicionadas}
+\begin{notacaja}
+Considera el estado de Bell: 
+\[ |\Psi^{+}\rangle = \frac{|01\rangle + |10\rangle}{\sqrt{2}} \]
+En este ejercicio analizarás las mediciones condicionadas.
+\end{notacaja}
+
+\begin{subcaja}{Apartado 1}
+Diseña un circuito cuántico que prepare este estado.
+\end{subcaja}
+
+Partimos del estado anterior ($\Phi^{+}$) y aplicamos una puerta X a uno de los qubits (por ejemplo, el segundo) para invertir su valor. Esto transforma $|00\rangle$ en $|01\rangle$ y $|11\rangle$ en $|10\rangle$.
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{6.circuito-psi+.png} \\
+    \captionof{figure}{Circuito para preparar el estado $\Psi^{+}$}
+\end{center}
+
+\begin{subcaja}{Apartado 2}
+Implementa una medida de un qubit (por ejemplo, el primer qubit) y condiciona la acción en el segundo qubit según el resultado obtenido.
+\end{subcaja}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{6.psi+-condicional.png} \\
+    \captionof{figure}{Circuito para medir el estado de un qubit de  $\Psi^{+}$ y realizar una acción condicionada}
+\end{center}
+
+Cuando medimos el primer qubit, este colapsa. Si el resultado es 0, sabremos que el sistema ha colapsado a $|01\rangle$, por lo que el segundo qubit será 1. Si medimos 1, el sistema está en $|10\rangle$ y el segundo qubit será 0.
+
+Podemos condicionar una puerta sobre el qubit 1 al resultado de la medición. En este caso, hemos optado por aplicar una puerta X (NOT) al qubit 1 si la medición del qubit 0 ha sido 0. Por tanto, estamos forzando al qubit 1 a tomar siempre el valor 0:
+\begin{itemize}
+    \item Si el qubit 0 ha colapsado a 0, el qubit 1 debería tomar valor 1, y al aplicarle una puerta X antes de medirlo, aseguramos que tome valor 0.
+    \item Si el qubit 0 ha colapsado a 1, el qubit 1 debería tomar valor 0, en cuyo caso no aplicaríamos la puerta X y lo dejaríamos en 0.
+\end{itemize}
+
+\begin{subcaja}{Apartado 3}
+Escribe el código QASM que incluya la preparación del estado y la medida condicional.
+\end{subcaja}
+
+\begin{verbatim}
+    OPENQASM 2.0;
+    include "qelib1.inc";
+    
+    qreg q[2];
+    creg c[2];
+    
+    h q[0];
+    cx q[0], q[1];
+    x q[1];
+    barrier q[0], q[1];
+    measure q[0] -> c[0];
+    if (c == 0) x q[1];
+    measure q[1] -> c[1];
+\end{verbatim}
+
+\begin{subcaja}{Apartado 4}
+Simula el circuito y muestra: Histograma de probabilidades, State Vector.
+\end{subcaja}
+
+\subsubsection*{Histograma de probabilidades simuladas}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{6.psi+-condicional-histograma.png} \\
+    \captionof{figure}{Histograma simulado de  $\Psi^{+}$ con medición y acción condicionada (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\subsubsection*{Vector de estado simulado}
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{6.psi+-condicional-vector.png} \\
+    \captionof{figure}{Vector de estado simulado de  $\Psi^{+}$ con medición y acción condicionada (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\subsubsection*{Histogramas de ejecuciones reales}
+
+Se ha ejecutado el circuito en dos ordenadores cuánticos de IBM distintos (fez y torino).
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{6.psi+-condicional-histograma-real.png} \\
+    \includegraphics[width=0.8\linewidth]{6.psi+-condicional-histograma-real-2.png} \\
+    \captionof{figure}{Histogramas de ejecuciones reales de $\Psi^{+}$ con medición y acción condicionada (Big-endian, MSB a la izquierda)}
+\end{center}
+
+\begin{subcaja}{Apartado 5}
+Interpreta los resultados, explicando cómo la medida de un qubit afecta al otro y qué evidencia de entrelazamiento se observa.
+\end{subcaja}
+El experimento demuestra que los valores de los qubits no son independientes. Antes de medir, ambos están en una superposición indefinida. Al medir uno de ellos, su estado se define instantáneamente, y debido al entrelazamiento, el estado del otro qubit queda forzado al valor opuesto.
+
+Comprobamos que la simulación nos arroja dos opciones con igual probabilidad con el circuito que hemos realizado: el primer qubit puede medirse a 0 o 1, pero el segundo siempre se medirá a 0. 
+
+El vector de estado, sin embargo, no puede mostrar probabilidades condicionadas, de modo que cuando se hace una medición, debe colapsar a uno de los estados posibles. Al realizar la medición, el qubit medido colapsa al estado de mayor probabilidad (en este caso 0) y los qubits que estén entrelazados con él, colapsan en función de su entrelazamiento (en este caso, el qubit 1 colapsa a 1). Como aplicamos una puerta X condicionada al resultado de la medición del qubit 0 y en la simulación el qubit 0 colapsa a 0, se aplica una puerta X al qubit 1, con lo que este, que ya ha colapsado a 1, toma valor 0. 
+
+Finalmente, en la ejecución real en un ordenador cuántico, comprobamos que el histograma de resultados tiene los picos máximos en las mediciones 00 y 01, siendo el primer bit el más significativo (qubit 1) y el segundo el menos significativo (qubit 0). Se observan desviaciones (mediciones de estados teóricamente no posibles) debido al ruido. 
+
+\begin{subcaja}{Apartado 6}
+Comenta posibles aplicaciones de este comportamiento en protocolos cuánticos.
+\end{subcaja}
+Este tipo de correlaciones fuertes son un elemento fundamental para algoritmos como la teleportación cuántica. Entrelazar dos qubits, medir uno y actuar en el otro en función de la medición, nos puede permitir transmitir un estado cuántico usando entrelazamiento y comunicación clásica. 
+
+También son de aplicación este tipo de circuitos en criptografía cuántica, para comprobar si los qubits comunicados han sido interceptados y medidos: supongamos que se entrelazan dos qubits y se envía uno de ellos. Se pueden aplicar rotaciones para medir el qubit transmitido en distintas bases. Si un ``man in the middle'' ha leído el qubit que se estaba transportando, y este ha colapsado, al aplicar una rotación y medirlo, la medida será puro azar (la correlación se ha roto), pero si el qubit no se ha leído, la medida estará correlacionada con la medida del qubit que no se ha transmitido. Emisor y receptor pueden comprobar los niveles de correlación de sus medidas para determinar si hay alguien observando la comunicación.
+
+\newpage
+
+\section{Ejercicio 7: Puertas de fase y visualizaciones en Qsphere y State Vector}
+\begin{subcaja}{Apartado 1}
+Diseña un circuito cuántico de un solo qubit que comience en el estado $|0\rangle$ y aplique una puerta Hadamard H seguida de una puerta de fase S (o T) al mismo qubit.
+\end{subcaja}
+
+\begin{center}
+    \includegraphics[width=1\linewidth]{7.circuito-H-S.png} \\
+    \captionof{figure}{Circuito con puerta H y S en el IBM quantum composer}
+\end{center}
+
+
+\begin{subcaja}{Apartado 2}
+Muestra el código QASM correspondiente al circuito.
+\end{subcaja}
+\begin{verbatim}
+    OPENQASM 2.0;
+    include "qelib1.inc";
+    
+    qreg q[1];
+    creg c[1];
+    h q[0];
+    s q[0];
+\end{verbatim}
+
+\begin{subcaja}{Apartado 3}
+Simula el circuito y genera las visualizaciones de la Qsphere y del State Vector.
+\end{subcaja}
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{7.qsphere-H-S.png} \\
+    \captionof{figure}{QSphere del circuito con puerta H y S en el IBM quantum composer}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{7.state-vector-H-S.png} \\
+    \captionof{figure}{State Vector del circuito con puerta H y S en el IBM quantum composer}
+\end{center}
+
+\begin{subcaja}{Apartado 4}
+Interpreta las visualizaciones, explicando cómo la puerta de fase modifica las amplitudes y las fases relativas del qubit.
+\end{subcaja}
+
+Inicialmente, tras la puerta H, el estado es $|+\rangle = (|0\rangle + |1\rangle)/\sqrt{2}$. La puerta S añade una fase compleja $i$ al componente $|1\rangle$, resultando en $(|0\rangle + i|1\rangle)/\sqrt{2}$. En la Qsphere y en el state vector, esto se visualiza como un cambio en el color del estado $|1\rangle$, aunque las probabilidades de medir 0 o 1 siguen siendo del 50\% cada una porque el módulo de las amplitudes no ha cambiado.
+
+\begin{subcaja}{Apartado 5}
+Comenta la utilidad de las puertas de fase en algoritmos cuánticos.
+\end{subcaja}
+
+Las puertas de fase son cruciales para crear interferencias constructivas o destructivas. En algoritmos como el de Grover, se usan para ajustar las fases de los estados de interés de manera que, al final del algoritmo, las respuestas incorrectas interfieran destructivamente (se anulen) y la respuesta correcta interfiera constructivamente (se amplifique).
+
+\newpage
+
+\section{Ejercicio 8: Ejecución de un circuito en Qiskit}
+\begin{subcaja}{Apartado 1}
+Ejecuta un circuito cuántico en Qiskit seleccionando un backend real con la menor carga posible, obtén los datos de ejecución y dibuja el circuito personalizando su color.
+\end{subcaja}
+
+\subsubsection*{Elección del circuito}
+Con objeto de demostrar bien las diferencias entre los ordenadores cuánticos reales y los simuladores, hemos optado por un circuito de Puertas Toffoli encadenadas. Las puertas Toffoli no existen de forma nativa en los ordenadores cuánticos de IBM, de modo que requieren varias puertas  para implementarlas. 
+
+Al encadenar varias puertas Toffoli, se va aumentando el tiempo de ejecución del circuito, produciéndose decoherencia. Además vamos produciendo cierta acumulación de errores, ya que cada puerta depende de la anterior. 
+
+Esta cascada de puertas Toffoli producirá una desviación respecto del resultado esperado mayor en los qubits del final.
+
+\subsubsection*{Programando el circuito}
+El circuito se genera con el siguiente código Qiskit:
+
+\begin{verbatim}
+    n_qubits = 6
+    qc = QuantumCircuit(n_qubits)
+    
+    # Ponemos q0 y q1 en estado |1>
+    qc.x(0)
+    qc.barrier()
+    qc.x(1)
+    qc.barrier()
+    
+    # Toffolis encadenadas
+    qc.ccx(0, 1, 2) 
+    qc.barrier()
+    qc.ccx(1, 2, 3)
+    qc.barrier()
+    qc.ccx(2, 3, 4)
+    qc.barrier()
+    qc.ccx(3, 4, 5)
+    
+    qc.measure_all()
+\end{verbatim}
+
+\subsubsection*{Dibujando el circuito}
+Para personalizar la visualización del circuito, hemos usado el siguiente estilo:
+
+\begin{verbatim}
+    estilo = {
+        'backgroundcolor': '#ADD8E6', 
+        'linecolor': '#808080',       
+        'textcolor': '#FF0000',       
+        'barrier': '#808080',         
+        'fontsize': 17,
+    }
+    qc.draw(output="mpl", style=estilo, scale=1.3)
+\end{verbatim}
+
+Con este estilo, obtenemos la siguiente representación del circuito:
+\begin{center}
+    \includegraphics[width=1\linewidth]{8.circuito-cascada-toffoli.png} \\
+    \captionof{figure}{Circuito de cascada toffoli}
+\end{center}
+
+\subsubsection*{Transpilando el circuito}
+La transpilación es el proceso por el que un circuito de Qiskit, implementado con puertas arbitrarias, se transforma para encajar en la arquitectura de un ordenador cuántico real (usando las puertas que están implementadas físicamente en el hardware, y teniendo en cuenta las interconexiones existentes entre qubits reales del ordenador cuántico). 
+
+Es interesante observar el circuito transpilado para el ordenador de IBM, ya que nos ayudará a enteneder el \textit{overhead} que añade la transpilación y cómo se crean realmente muchas puertas, lo cual termina siendo suficiente para apreciarse en la precisión de los qubits según avanzamos por la cascada de puertas Toffoli:
+
+\begin{center}
+    \includegraphics[width=1\linewidth]{8.circuito-transpilado.png} \\
+    \captionof{figure}{Circuito transpilado de cascada toffoli}
+\end{center}
+
+\subsubsection*{Resultado esperado}
+
+El circuito se ha diseñado para tener un resultado esperado muy simple: $|111111\rangle$. Los dos primeros qubits están a $|1\rangle$ y el resto de qubits encadenan puertas CCNOT que van cambiándolos del estado $|0\rangle$ al estado $|1\rangle $
+
+\subsubsection*{Ejecución}
+
+Para entender bien las diferencias entre las distintas opciones que nos da Qiskit, hemos optado por realizar tres ejecuciones
+- Ejecución simulada sin error (nos muestra el resultado ideal).
+- Ejecución simulada con error simulado. Hemos usado el FakeProvider FakeFez puesto que es el Backend real que nos ha estado dando IBM en estas pruebas, y así los resultados encajarán más con el modelo de ruido teórico para este ordenador.
+- Ejecución real en el ordenador FakeFez de IBM.
+
+Para realizar estas mediciones hemos hecho la ejecución del siguiente modo:
+
+\begin{verbatim}
+    simulator = AerSimulator()
+    job_ideal = simulator.run(transpile(qc, simulator), shots=2048)
+    counts_ideal = job_ideal.result().get_counts()
+    
+    backend_noisy = FakeFez()
+    qc_transpiled = transpile(qc, backend_noisy, optimization_level=3)
+    job_noisy = backend_noisy.run(qc_transpiled, shots=2048)
+    counts_noisy = job_noisy.result().get_counts()
+    
+    service = QiskitRuntimeService()
+    print("\nBuscando el ordenador cuántico real menos ocupado...")
+    backend = service.least_busy(operational=True, simulator=False)
+    print(f"Ejecutando en: {backend.name}")
+    pm = generate_preset_pass_manager(backend=backend, optimization_level=3)
+    isa_circuit = pm.run(qc)
+
+    sampler = Sampler(backend)
+
+    job = sampler.run([isa_circuit])
+    job_id = job.job_id()
+    result = job.result()
+\end{verbatim}
+
+\subsubsection*{Extracción de datos}
+El resultado de la ejecución es un histograma. Se trata de un diccionario (counts en nuestro código) que tiene estados como claves y número de veces que se han obtenido como valores.
+
+Para mostar la información de un modo facil de interpretar, hemos transformado este histograma en un valor de probabilidad para cada qubit (porcentaje de las veces que ha tomado el valor 1). Puesto que no hemos producido superposición ni entrelazamiento entre nuestros qubits, no necesitamos visualizar los estados completos (para ver las inter-relaciones de entrelazamiento entre qubits), y es más interesante visualizar los qubits individualmente. 
+
+Hemos usado la siguiente función:
+
+\begin{verbatim}
+    def get_prob_per_qubit(counts, n):
+        probs = [0.0] * n
+        total_shots = sum(counts.values())
+        for bitstring, count in counts.items():
+            # bitstring viene como "q4 q3 q2 q1 q0"
+            reversed_bits = bitstring[::-1] 
+            for i in range(n):
+                if reversed_bits[i] == '1':
+                    probs[i] += count
+        return [p / total_shots for p in probs]
+\end{verbatim}
+
+Y, a continuación, el siguiente código:
+
+\begin{verbatim}
+    probs_ideal = get_prob_per_qubit(counts_ideal, n_qubits)
+    probs_noisy = get_prob_per_qubit(counts_noisy, n_qubits)
+    counts_real = result[0].data.meas.get_counts()
+    probs_real = get_prob_per_qubit(counts_real, n_qubits)
+\end{verbatim}
+
+\begin{subcaja}{Apartado 2}
+Analiza los resultados y comenta qué diferencias pueden existir entre ejecutar en un simulador o en un ordenador cuántico real.
+\end{subcaja}
+
+\subsubsection*{Visualización de datos}
+Vamos en primer lugar a visualizar los datos obtenidos (que están en las variables $probs\_ideal$, $probs\_noisy$ y $probs\_real$. Lo hacemos del siguiente modo:
+
+\begin{verbatim}
+    qubit_labels = [f'q{i}' for i in range(n_qubits)]
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(qubit_labels, probs_ideal, 'b--o', label='Ideal', alpha=0.6)
+    plt.plot(qubit_labels, probs_noisy, 'r-s', label='Hardware Real (Simulado)', linewidth=2)
+    plt.plot(qubit_labels, probs_real, 'r-x', label='Hardware Real', linewidth=1)
+    
+    # Decoración para entender mejor
+    plt.axvline(x=1.5, color='gray', linestyle=':', alpha=0.5)
+    plt.text(0.2, 0.6, 'Qubits de entrada', color='blue')
+    plt.text(2.5, 0.6, 'Cascada Toffoli', color='red')
+    
+    plt.title('Acumulación de errores en Cascada de Toffolis')
+    plt.ylabel("Probabilidad de medir '1'")
+    plt.ylim(0, 1.1)
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.show()
+\end{verbatim}
+
+El resultado es el siguiente:
+
+\begin{center}
+    \includegraphics[width=1\linewidth]{8.probabilidad-qubits.png} \\
+    \captionof{figure}{Probabilidad de medir $|1\rangle$ en cada qubit}
+\end{center}
+
+\subsubsection*{Interpretando los datos}
+El experimento cumple el propósito para el que ha sido diseñado. Muestra una degradación incremental de los qubits que depende de la longitud del circuito y las interdependencias que producen acumulación de error.
+
+Se observa como en el modelo ideal todos los bits toman valor 1. El modelo simulado introduce un patrón de error que se alinea bastante bien con la ejecución real, si bien en nuestros experimentos las ejecuciones reales han demostrado de forma consistente una tasa de error mayor que el modelo de ruido simulado.
+
+\subsubsection*{Código fuente}
+Aunque se han incluído aquí fragmentos del código fuente, no se ha incluído todo el código. Para facilitar su legibilidad, se adjunta un PDF con el código comlpeto y con resaltado. El código no se ha publicado para evitar copias, pero se publicará en \hyperlink{https://github.com/othermore/MQC-MP}{https://github.com/othermore/MQC-MP} una vez expirado el plazo de entrega.
+
+\newpage
+
+\section{Ejercicio 9: Circuito cuántico en Qiskit}
+\begin{notacaja}
+Crea y ejecuta un circuito cuántico en Qiskit que cumpla los siguientes objetivos:
+\end{notacaja}
+
+Partiremos de un circuito vacío con tres qubits.
+
+\begin{verbatim}
+from qiskit import QuantumCircuit
+from qiskit.circuit.library import UnitaryGate
+
+qc = QuantumCircuit(3)
+
+\end{verbatim}
+
+Como tenemos que ir analizando la evolución del circuito, y no podemos poner código Qiskit directamente en el Quantum Composer, preparamos una serie de funciones que nos muestren
+\begin{itemize}
+    \item El diagrama del circuito
+    \item La QSphere
+    \item El vector de estado: No he encontrado un modo de generar el vector de estado directamente desde Qiskit, así que he optado por generar yo un histograma a mano, cambiando los colores de las barras para representar las fases, igual que hace el quantum composer.
+\end{itemize}
+
+El código para hacer esto es el siguiente:
+
+\begin{verbatim}
+
+def get_contrast_color(rgba):
+    r, g, b, alpha = rgba
+    luminance = 0.299 * r + 0.587 * g + 0.114 * b
+    return 'black' if luminance > 0.5 else 'white'
+
+def plot_vector_state(state):
+    probabilities = state.probabilities()
+    amplitudes = np.abs(state.data)
+    phases = np.angle(state.data)
+
+    # Etiquetas para cada estado
+    n_qubits = state.num_qubits
+    labels = [format(i, f'0{n_qubits}b') for i in range(2**n_qubits)]
+    
+    # Color de la barra en función de la fase
+    norm = plt.Normalize(-np.pi, np.pi)
+    colors = cm.hsv(norm(phases)) 
+    
+    # Crear gráfico
+    fig, ax = plt.subplots(figsize=(5, 3))
+    bars = ax.bar(labels, probabilities, color=colors)
+    
+    # Añadimos los colores
+    sm = cm.ScalarMappable(cmap='hsv', norm=norm)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax)
+    cbar.set_label('Fase (Radianes)')
+
+    # Añadimos etiquetas con el ángulo de fase para que sepamos cual es (el color no tiene leyenda)
+    for rect, phase, prob, color in zip(bars, phases, probabilities, colors): #Iteramos por las barras, las fases y las probabilidades "todo en uno"
+        # Si no es un estado posible, no le ponemos la fase
+        if prob > 0.001:
+            height = rect.get_height()
+            angle_text = f"{np.degrees(phase):.0f}°"
+            ax.text(
+                rect.get_x() + rect.get_width() / 2, #La posición de la barra
+                height - 0.06, #La altura por debajo de la barra
+                angle_text, 
+                ha='center', 
+                va='bottom', 
+                fontsize=9,  
+                fontweight='normal',
+                color=get_contrast_color(color)
+            )
+    
+    # Leyendas
+    ax.set_ylabel('Probabilidad')
+    ax.set_title('Amplitud (Altura) y Fase (Color) del Estado')
+    ax.set_ylim(0, max(probabilities) * 1.1)
+
+    for bar in bars:
+        bar.set_edgecolor('black')
+        
+    plt.show()
+    
+def display_all(qc):
+    state = Statevector.from_instruction(qc)
+    display(qc.draw('mpl'))
+    display(plot_state_qsphere(state))
+    display(plot_vector_state(state))
+    print(state.draw('latex').data)
+\end{verbatim}
+
+\subsubsection*{Código fuente}
+Aunque se han incluído aquí fragmentos del código fuente, no se ha incluído todo el código. Para facilitar su legibilidad, se adjunta un PDF con el código completo y con resaltado. El código no se ha publicado para evitar copias, pero se publicará en \hyperlink{https://github.com/othermore/MQC-MP}{https://github.com/othermore/MQC-MP} una vez expirado el plazo de entrega.
+
+\begin{subcaja}{Apartado 1}
+Generar superposición y entrelazamiento (Hadamard al qubit q[0] y CNOT ($q[0] \rightarrow q[1]$)).
+\end{subcaja}
+
+Lo hacemos con el siguiente código:
+\begin{verbatim}
+    qc.h(0)
+    qc.cx(0, 1)
+\end{verbatim}
+
+Obtenemos el siguiente resultado:
+\begin{center}
+    \includegraphics[width=0.3\linewidth]{9.circuito-paso-1.png} \\
+    \captionof{figure}{Circuito con superposición y entrelazamiento}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-1-qsphere.png} \\
+    \captionof{figure}{Qsphere del circuito con superposición y entrelazamiento}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-1-vector-state.png} \\
+    \captionof{figure}{Vector de estado del circuito con superposición y entrelazamiento}
+\end{center}
+
+El vector de estado en este momento es:
+$$\frac{\sqrt{2}}{2} |000\rangle+\frac{\sqrt{2}}{2} |011\rangle$$
+
+
+\begin{subcaja}{Apartado 2}
+Generar un estado GHZ de 3 qubits: 
+  - Aplica Toffoli (CCX) con q[0] y q[1] como controles y q[2] como target.
+\end{subcaja}
+
+
+Lo hacemos con el siguiente código:
+\begin{verbatim}
+    qc.ccx(0, 1, 2)
+\end{verbatim}
+
+Obtenemos el siguiente resultado:
+\begin{center}
+    \includegraphics[width=0.3\linewidth]{9.circuito-paso-2.png} \\
+    \captionof{figure}{Circuito tras toffoli}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-2-qsphere.png} \\
+    \captionof{figure}{Qsphere del circuito tras toffoli}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-2-vector-state.png} \\
+    \captionof{figure}{Vector de estado del circuito tras toffoli}
+\end{center}
+
+El vector de estado en este momento es:
+$$\frac{\sqrt{2}}{2} |000\rangle+\frac{\sqrt{2}}{2} |111\rangle$$
+
+
+
+\begin{subcaja}{Apartado 3}
+Demostrar efectos de SWAP: 
+\begin{itemize}
+  \item Aplica SWAP entre q[1] y q[2] para ver cómo se reorganizan los qubits entrelazados.
+\end{itemize}
+\end{subcaja}
+
+Lo hacemos con el siguiente código:
+\begin{verbatim}
+    qc.swap(1, 2)
+\end{verbatim}
+
+Obtenemos el siguiente resultado:
+\begin{center}
+    \includegraphics[width=0.4\linewidth]{9.circuito-paso-3.png} \\
+    \captionof{figure}{Circuito tras SWAP}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-3-qsphere.png} \\
+    \captionof{figure}{Qsphere del circuito tras SWAP}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-3-vector-state.png} \\
+    \captionof{figure}{Vector de estado del circuito tras SWAP}
+\end{center}
+
+El vector de estado en este momento es:
+$$\frac{\sqrt{2}}{2} |000\rangle+\frac{\sqrt{2}}{2} |111\rangle$$
+
+
+\begin{subcaja}{Apartado 4}
+Aplicar una puerta personalizada: 
+\begin{itemize}
+  \item Define una puerta unitaria propia (UnitaryGate o U3) sobre q[0] para observar cómo afecta un qubit entrelazado.
+\end{itemize}
+\end{subcaja}
+
+Optamos por definir una puerta de rotación $3\pi/4$, que no es una rotación estándar y nos permitirá ver el efecto del cambio de fase sil a aplicamos sobre q[0] que está en superposición.
+
+Tenemos que hacer una matriz de rotación. Las matrices de rotación en torno al eje Z se definen a partir de la matriz Pauli Z (\(\sigma _{z}\)), del siguiente modo:
+
+$$R_z(\theta) = e^{-i \frac{\theta}{2} \sigma_z} = \begin{pmatrix} e^{-i\theta/2} & 0 \\ 0 & e^{i\theta/2} \end{pmatrix}$$
+
+Usando la identidad de euler:
+
+$$e^{ix} = \cos(x) + i\sin(x)$$
+
+Obtenemos la matriz para $3\pi/4$:
+
+$$R_z(3\pi/4) = \begin{pmatrix} \cos(\frac{3\pi}{8}) - i\sin(\frac{3\pi}{8}) & 0 \\ 0 & \cos(\frac{3\pi}{8}) + i\sin(\frac{3\pi}{8}) \end{pmatrix}$$
+
+El código para construir la puerta personalizada es el siguiente:
+\begin{verbatim}
+# Hagamos una puerta que produzca una rotación de fase de 3*Pi/4. 
+alpha = 3 * np.pi / 4
+
+# Tenemos que calcular la matriz de rotación
+c = np.cos(alpha / 2)
+s = np.sin(alpha / 2)
+
+term_00 = np.cos(alpha / 2) - 1j *  np.sin(alpha / 2) # cos - i*sin
+term_11 = np.cos(alpha / 2) + 1j *  np.sin(alpha / 2)  # cos + i*sin
+
+matrix_rz_3pi4 = [
+    [term_00, 0],
+    [0,       term_11]
+]
+
+custom_gate = UnitaryGate(matrix_rz_3pi4, label="RZ 3Pi/4")
+qc.append(custom_gate, [0])
+\end{verbatim}
+
+Obtenemos el siguiente resultado:
+\begin{center}
+    \includegraphics[width=0.3\linewidth]{9.circuito-paso-4.png} \\
+    \captionof{figure}{Circuito tras $Z_{3\pi/4}$}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-4-qsphere.png} \\
+    \captionof{figure}{Qsphere del circuito tras $Z_{3\pi/4}$}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{9.circuito-paso-4-vector-state.png} \\
+    \captionof{figure}{Vector de estado del circuito tras $Z_{3\pi/4}$}
+\end{center}
+
+El vector de estado en este momento es:
+$$\frac{\sqrt{2}}{2} |000\rangle+\frac{\sqrt{2}}{2} |111\rangle$$
+
+
+
+\begin{subcaja}{Apartado 5}
+Analiza los resultados:
+\begin{itemize}
+    \item Ejecuta el circuito en un simulador.
+    \item Observa el State Vector y explica cómo cada puerta modifica el estado de los qubits.
+    \item Comenta el efecto del SWAP y de la puerta personalizada en el sistema entrelazado.
+\end{itemize}
+\end{subcaja}
+Como hemos visto, el circuito ha evolucionado según aplicábamos puertas:
+
+\begin{itemize}
+    \item En primer lugar se ha puesto en superposición y entrelazamiento (los dos primeros qubits q[0] y q[1], están en superposición pero deben colapsar al mismo valor, o los dos valen 0 o los dos 1).
+    \item En segundo lugar hemos entrelazado el tercer qubit con los otros dos, que como ya estaban entrelazados, produce un triple entrelazamiento. Esto se podría haber conseguido también entrelazando q[1] y q[2] con un CNOT, puesto que ya existía entrelazamiento entre q[0] y q[1]. 
+    \item En tercer lugar, hemos hecho un SWAP entre los qubits q[1] q [2]. Esto no produce ningún efecto teórico puesto que ambos qubits están en un entrelazamiento completo. En la práctica, sería contraproducente hacerlo ya que aumentaría la longitud del circuito y las probabilidades de decoherencia.
+    \item En último lugar, aplicamos una rotación personalizada. Esto solo cambia la fase del qubit, no su amplitud. Por eso tenemos la misma probabilidad de colapsar a cada estado. Sin embargo, a partir de este momento, podemos actuar de forma diferente sobre cada uno de los estados, aprovechando la interferencia (al estar en distintas fases, pueden interferir destructivamente).
+\end{itemize}
+\newpage
+
+\section{Ejercicio 10: Análisis de circuito cuántico}
+\begin{subcaja}{Apartado 1}
+¿Qué ocurre si creamos un circuito de un único qubit con las siguientes puertas en secuencia H, Z, H?
+\end{subcaja}
+La secuencia de puertas $H-Z-H$ es matemáticamente equivalente a una puerta X (NOT). Recordemos que H actúa de forma \textbf{opuesta} sobre el estado $|0\rangle$ que sobre el $|1\rangle$ (o sobre las componentes correspondientes de un estado compuesto). 
+
+Al aplicar dos H seguidas, volvemos al estado anterior, pero si entre ellas aplicamos una rotación de 180º sobre el eje Z (un cambio de fase), aplicar la puerta H moverá el qubit al estado opuesto al inicial.
+
+Podemos demostrarlo multiplicando las matrices correspondientes:
+\[ H = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}, \quad Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \]
+
+Calculamos primero $H \cdot Z$:
+\[ HZ = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix} \]
+
+Y ahora multiplicamos por H otra vez:
+\[ (HZ)H = \frac{1}{2} \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix} = \frac{1}{2} \begin{pmatrix} 0 & 2 \\ 2 & 0 \end{pmatrix} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \]
+
+El resultado es la matriz de la puerta X.
+
+\begin{subcaja}{Apartado 2}
+Analiza el comportamiento con distintos valores de inicio (0 y 1).
+\end{subcaja}
+
+Si iniciamos en estado 0, la secuencia lo convierte en 1. Pasa del polo norte, al ecuador en el punto + (positivo del eje X), al punto - (negativo del eje X) y de ahí al polo sur. Matemáticamente:
+
+\[ |0\rangle \xrightarrow{H} |+\rangle \xrightarrow{Z} |-\rangle \xrightarrow{H} |1\rangle \]
+
+Si iniciamos en 1, la secuencia lo convierte en 0. Pasa del polo sur, al ecuador en el punto - (negativo del eje X), al punto + (positivo del eje X) y de ahí al polo norte. Matemáticamente:
+\[ |1\rangle \xrightarrow{H} |-\rangle \xrightarrow{Z} |+\rangle \xrightarrow{H} |0\rangle \]
+
+\begin{subcaja}{Apartado 2}
+Dibuja el circuito, ejecútalo y analiza sus resultados
+\end{subcaja}
+
+Hagamos un circuito con dos qubits. Uno lo inicializaremos a 0 y el otro a 1, partiendo por tanto de un estado inicial $|01\rangle$. Luego aplicaremos la secuencia H Z H a ambos, para ver como se comportan.
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{10.circuito-hzh.png} \\
+    \captionof{figure}{Circuito HZH sobre dos estados iniciales distintos}
+\end{center}
+
+Obtenemos el siguiente vector de estado:
+
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{10.circuito-hzh-state-vector.png} \\
+    \captionof{figure}{Circuito HZH sobre dos estados iniciales distintos}
+\end{center}
+
+
+Como podemos comprobar viendo el vector de estado (hay que tener en cuenta que IBM muestra q[0] a la derecha), el resultado final es el esperado: ambos qubits acaban en el valor opuesto al valor inicial. Por eso solo hay un estado posible final, el $|10\rangle$
+
+\end{document}
